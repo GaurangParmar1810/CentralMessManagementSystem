@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+node_modules
+npm-debug.log*
+package-lock.json
+app.js
