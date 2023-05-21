@@ -1,52 +1,42 @@
 <%- include('./partials/header') %>
 
-
 <div id="wrapper">
-    <%- include('./partials/nav') %>
-    <% if(err) {%>
-
+    <% if(err) { %>
         <% if(err.includes("Success") || err.includes("success") || err.includes("Successfully") ||
-            err.includes("successfully") || err.includes("Successfull") || err.includes("successfull") )
-            {%>
-
+            err.includes("successfully") || err.includes("Successfull") || err.includes("successfull") ) { %>
             <div class="container col-md-6 col-xl-4 px-2 rounded-1">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <%=err %>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                            aria-label="Close"></button>
+                    <%= err %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
-            <% } else { %>
-
-
-                <div class="container col-md-6 col-xl-4 px-2 rounded-1">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <%=err %>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                    </div>
+        <% } else { %>
+            <div class="container col-md-6 col-xl-4 px-2 rounded-1">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= err %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <% } %>
-                    <% } %>
-
+            </div>
+        <% } %>
+    <% } %>
 
     <div class="container bg-dark mt-3 col-md-6 col-xl-6 px-5 py-4 mb-5 rounded-5">
         <div class="text-center fs-2 mt-4 text-light">SignUp</div>
         <div class="text-center mb-5 text-light">Provide the details mentioned.</div>
 
-        <form action="/signup" method="post">
+        <form action="/signup" method="post" enctype="multipart/form-data">
 
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="something" required>
-                        <label for="fullname">Full name</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name" required>
+                        <label for="fullname">Full Name</label>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" name="username" placeholder="something" required>
-                        <label for="username">User name</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="User Name" required>
+                        <label for="username">User Name</label>
                     </div>
                 </div>
             </div>
@@ -54,9 +44,8 @@
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                        <input type="tel" class="form-control" id="phone-number" name="phone" placeholder="012345678"
-                            pattern="[0-9]{10}" required>
-                        <label for="phone-number">Phone number</label>
+                        <input type="tel" class="form-control" id="phone-number" name="phone" placeholder="012345678" pattern="[0-9]{10}" required>
+                        <label for="phone-number">Phone Number</label>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
@@ -70,36 +59,30 @@
             <div class="row">
                 <div class="col-12 col-sm-4">
                     <div class="form-floating mb-4">
-
-                        <select id="role" class="form-select selectpicker" name="role" placeholder="Role" data-width="auto"
-                            required>
-                            <option selected value="customer"> Customer </option>
-                            <option value="cadet"> Cadet </option>
+                        <select id="role" class="form-select selectpicker" name="role" placeholder="Role" data-width="auto" required>
+                            <option selected value="customer">Customer</option>
+                            <option value="cadet">Cadet</option>
                         </select>
                         <label for="role">Role</label>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-4">
                     <div class="form-floating mb-3">
-                        <select id="gender" class="form-select selectpicker" name="gender" placeholder="Gender" data-width="auto"
-                            required>
-                            <option selected value="male"> Male </option>
-                            <option value="female"> Female </option>
-                            <option value="other"> Other </option>
+                        <select id="gender" class="form-select selectpicker" name="gender" placeholder="Gender" data-width="auto" required>
+                            <option selected value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
                         </select>
                         <label for="gender">Gender</label>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-4">
                     <div class="form-floating mb-3">
                         <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="name@example.com" max="9999-12-31" required>
-                        <label for="birthdate">birth date</label>
+                        <label for="birthdate">Birth Date</label>
                     </div>
                 </div>
             </div>
-
 
             <div class="row">
                 <div class="col-12 col-sm-6">
@@ -108,31 +91,30 @@
                         <label for="password">Password</label>
                     </div>
                 </div>
-
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="confirmPassword" name="cpassword" placeholder="Password"
-                            required>
+                        <input type="password" class="form-control" id="confirmPassword" name="cpassword" placeholder="Confirm Password" required>
                         <label for="confirmPassword">Confirm Password</label>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                    <div class="form-floating mb-3">
+                        <input type="file" class="form-control" id="image" name="image" accept=".jpeg, .jpg, .png">
+                        <label for="image">Profile Image (JPEG, JPG, PNG)</label>
+                    </div>
+                </div>
+            </div>
 
-
-            <!-- <div class="text-center">
-                <a href="#" style="text-decoration:none;">Forgot password?</a>
-            </div> -->
             <div class="text-center">
                 <button class="btn btn-primary mt-4 col-3" type="submit">Register</button>
             </div>
 
-            <div class="text-center fs-4 my-3 mt-5 text-light">Already have an account? <a href="/login"
-                    style="text-decoration:none;">Login</a>
+            <div class="text-center fs-4 my-3 mt-5 text-light">
+                Already have an account? <a href="/login" style="text-decoration:none;">Login</a>
             </div>
         </form>
     </div>
 
-
-
-    <%- include('./partials/footer') %>
-    
+<%- include('./partials/footer') %>

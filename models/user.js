@@ -47,7 +47,11 @@ const userSchema = new Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    profileImage: {
+        type: String,
+        default: 'photos/user.jpg'
+      }
 });
 
 userSchema.pre('save', async function (next) {

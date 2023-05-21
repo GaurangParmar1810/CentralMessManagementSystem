@@ -206,72 +206,84 @@ const signup_get = (req, res) => {
     res.render('signup', { err });
 }
 const signup_post = async (req, res) => {
-    // try {
-    const password = req.body.password;
-    const cpassword = req.body.cpassword;
+    try {
+        const password = req.body.password;
+        const cpassword = req.body.cpassword;
 
-    //validate password
-    const validpassword = validatepassword(password);
-    if (!validpassword) {
-        res.status(500).render('signup', { err: "Password must be between 6 to 16 characters and must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character" });
+        //validate password
+        const validpassword = validatepassword(password);
+        if (!validpassword) {
+            res.status(500).render('signup', { err: "Password must be between 6 to 16 characters and must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character" });
+        }
+
+        if (password === cpassword) {
+
+            const user = new User({
+                fullname: req.body.fullname,
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                phone: req.body.phone,
+                role: req.body.role,
+                gender: req.body.gender,
+                date: req.body.birthdate,
+            });
+            //verify username and email in the database if already exists
+
+            const foundUser = await User.findOne({ username: user.username });
+            console.log(foundUser);
+            if (foundUser) {
+                const err = 'Username already exists.';
+                res.status(500).render('signup', { err });
+            }
+            const foundEmail = await User.findOne({ email: user.email });
+            console.log(foundEmail);
+
+            if (foundEmail) {
+                res.status(500).render('signup', { err: "Email already exists." });
+            }
+            if (validator.isEmail(`${user.email}`) === false) {
+                res.status(500).render('signup', { err: "Email is not valid." });
+            }
+            const now = new Date();
+            const age = now.getFullYear() - user.date.getFullYear();
+
+            // Validate birthdate constraints
+            if (age < 5) {
+                return res.status(500).render('signup', { err: 'You must be at least 5 years old to sign up.' });
+            } else if (age > 110) {
+                return res.status(500).render('signup', { err: 'Invalid birth date.' });
+            }
+
+            // Check if an image file was uploaded
+            if (req.file) {
+                const profileImage = req.file.filename;
+                user.profileImage = profileImage;
+            } else {
+                const defaultProfileImage = 'photos/user.jpg';
+                user.profileImage = defaultProfileImage;
+            }
+  
+
+            //if not exists then save the user in the database
+            user.save().then(async (result) => {
+                // sendVerifyMail(req.body.fullname, req.body.email, result._id, req.body.role);
+                const sendMail = await sendVerifyMail(req.body.fullname, req.body.email, result._id, req.body.role, req);
+                if (req.body.role === 'cadet')
+                    res.status(200).render('login', { err: 'Please ask you manager to confirm your account.' });
+                else
+                    res.status(200).render('login', { err: 'Please verify your email to log in successfully.' });
+            }).catch((err) => {
+                console.log(err);
+            }
+            );
+        } else {
+            res.status(500).render('signup', { err: "Password are not matching." });
+        }
+
+    } catch (error) {
+        res.status(404).render('404', { err: "Signup_post error" });
     }
-
-    if (password === cpassword) {
-        const user = new User({
-            fullname: req.body.fullname,
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            phone: req.body.phone,
-            role: req.body.role,
-            gender: req.body.gender,
-            date: req.body.birthdate,
-        });
-        //verify username and email in the database if already exists
-
-        const foundUser = await User.findOne({ username: user.username });
-        console.log(foundUser);
-        if (foundUser) {
-            const err = 'Username already exists.';
-            res.status(500).render('signup', { err });
-        }
-        const foundEmail = await User.findOne({ email: user.email });
-        console.log(foundEmail);
-
-        if (foundEmail) {
-            res.status(500).render('signup', { err: "Email already exists." });
-        }
-        if (validator.isEmail(`${user.email}`) === false) {
-            res.status(500).render('signup', { err: "Email is not valid." });
-        }
-        const now = new Date();
-        const age = now.getFullYear() - user.date.getFullYear();
-
-        // Validate birthdate constraints
-        if (age < 5) {
-            return res.status(500).render('signup', { err: 'You must be at least 5 years old to sign up.' });
-        } else if (age > 110) {
-            return res.status(500).render('signup', { err: 'Invalid birth date.' });
-        }
-        //if not exists then save the user in the database
-        user.save().then(async (result) => {
-            // sendVerifyMail(req.body.fullname, req.body.email, result._id, req.body.role);
-            const sendMail = await sendVerifyMail(req.body.fullname, req.body.email, result._id, req.body.role, req);
-            if (req.body.role === 'cadet')
-                res.status(200).render('login', { err: 'Please ask you manager to confirm your account.' });
-            else
-                res.status(200).render('login', { err: 'Please verify your email to log in successfully.' });
-        }).catch((err) => {
-            console.log(err);
-        }
-        );
-    } else {
-        res.status(500).render('signup', { err: "Password are not matching." });
-    }
-
-    // } catch (error) {
-    //     res.status(404).render('404', { err: "Signup_post error" });
-    // }
 }
 //----------------------Functions for forget password-----------------------------
 

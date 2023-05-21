@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const authController = require('../controllers/authController');
 const methodoverride = require('method-override');
-const { requireAuth, checkUser } = require('../middleware/authMiddleware');
+const { requireAuth, checkUser, upload } = require('../middleware/authMiddleware');
 router.use(methodoverride('_method'));
 
 router.get('*', checkUser);
@@ -34,7 +34,7 @@ router.get('/faq', authController.faq_get);
 
 
 
-router.post('/signup', authController.signup_post);
+router.post('/signup',upload.single('image'), authController.signup_post);
 
 router.get('/customer/:username', requireAuth, authController.customer_get);
 
