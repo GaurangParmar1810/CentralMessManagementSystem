@@ -528,9 +528,9 @@ const customer_edit_get = async (req, res) => {
     }
 }
 const customer_edit_patch = async (req, res) => {
-    try {
+    // try {
         const { username } = req.params; // use req.params.username to get the username
-        const customer = await User.findOne({ username: username, role: 'customer' });
+        let customer = await User.findOne({ username: username, role: 'customer' });
 
         // customer.password = req.body.password;
         customer.fullname = req.body.fullname;
@@ -549,9 +549,40 @@ const customer_edit_patch = async (req, res) => {
         } else if (age > 110) {
             return res.status(500).render('customer/edit', { customer, err: 'Invalid birth date.' });
         }
+        
+        if (req.file) {
+            // Check if the image is not the default image
+            if (customer.profileImage !== 'person_logo.svg') {
+              // Delete the pre-existing image
 
+              //deleting pre-existing image
+              const imagePathToDelete = path.join(__dirname, '..', 'public', 'uploads', customer.profileImage);
+              fs.unlinkSync(imagePathToDelete);              
+            }
+            //now storing the another image
+            const image = sharp(req.file.path);
+            const imageInfo = await image.metadata();
+
+            // Process the uploaded image, such as resizing and format conversion
+            const resizedImage = image.resize({ width: 200, height: 200 }).jpeg({ quality: 80 });
+
+            // Generate a unique filename for the processed image
+            const filename = `profile_${Date.now()}.jpg`;
+            console.log(filename);
+            console.log("Gauranng");
+            // Save the processed image
+            const imagePath = path.join(__dirname, '..', 'public', 'uploads', filename);
+            await resizedImage.toFile(imagePath);
+
+            customer.profileImage = filename;
+
+            // Delete the original uploaded image file
+            fs.unlinkSync(req.file.path);
+        }
+        console.log(customer.profileImage);
+        console.log("Gaurang Parmar");
         User.updateOne({ username: username },
-            { $set: { fullname: req.body.fullname, date: req.body.date, email: req.body.email, phone: req.body.phone, gender: req.body.gender }, validate: true }).then((result) => {
+            { $set: { fullname: req.body.fullname, date: req.body.date,  phone: req.body.phone, gender: req.body.gender, profileImage:customer.profileImage }, validate: true }).then((result) => {
                 console.log(result);
                 res.render('customer/index', { customer: customer, err: 'Profile has been updated successfully.' });
             }).catch((err) => {
@@ -571,11 +602,11 @@ const customer_edit_patch = async (req, res) => {
 
 
 
-    } catch (error) {
-        res.status(404).render('404', { err: `customer_edit_patch error` });
-        // console.log(error);
-        // res.send('An error occurred while finding the customer.');
-    }
+    // } catch (error) {
+    //     res.status(404).render('404', { err: `customer_edit_patch error` });
+    //     // console.log(error);
+    //     // res.send('An error occurred while finding the customer.');
+    // }
 };
 
 

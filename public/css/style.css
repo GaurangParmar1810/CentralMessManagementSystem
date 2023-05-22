@@ -41,3 +41,54 @@ label {
 input {
     margin: 0.4rem;
 }
+
+.lb-overlay {
+    background-color: rgba(0, 0, 0, 0.7); /* Adjust the opacity value as needed */
+  }
+  
+  .lb-container {
+    background-color: transparent !important;
+  }
+  
+  
+  .lb-image {
+    max-height: 90vh; /* Adjust the maximum height of the image within the lightbox */
+    max-width: 90vw; /* Adjust the maximum width of the image within the lightbox */
+  }
+  
+  .profile {
+    position: relative;
+  }
+  
+  .profile .profile-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  
+  .profile .profile-image-container img {
+    display: block;
+    width: 50%;
+    height: auto;
+  }
+  
+  .profile .profile-image-container .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust the opacity as desired */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .profile .profile-image-container:hover .overlay {
+    opacity: 1;
+  }
+  
+  .profile .profile-info {
+    margin-top: 10px;
+    text-align: center;
+  }
+  

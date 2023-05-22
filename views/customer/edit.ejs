@@ -16,12 +16,15 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <div class="profile my-4 table-striped-columns">
-                                <div class="mb-3"><img src="/photos/person_logo.svg" alt="person"
-                                        width="20%"></div>
-                                <div class="fs-3"><%= customer.fullname%></div>
-                                <div class="fs-5">Customer</div>
+                          <div class="profile my-4 table-striped-columns">
+                            <div class="mb-3">
+                              <a href="/uploads/<%= customer.profileImage %>" data-lightbox="profile-image">
+                                <img src="/uploads/<%= customer.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                              </a>
                             </div>
+                            <div class="fs-3"><%= customer.fullname %></div>
+                            <div class="fs-5">Customer</div>
+                          </div>  
                         </tr>
                     </thead>
                     <tbody>
@@ -92,97 +95,92 @@
 
               
 
-              <form action="/customer/<%= customer.username%>/edit?_method=patch" method="post">
-
+              <form action="/customer/<%= customer.username%>/edit?_method=patch" method="post" enctype="multipart/form-data">
                 <div class="row">
                   <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="fullname" name="fullname"
-                        value="<%= customer.fullname%>" required>
+                      <input type="text" class="form-control" id="fullname" name="fullname" value="<%= customer.fullname%>" required>
                       <label for="fullname">Full name</label>
                     </div>
                   </div>
                   <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="username" name="username"
-                        value="<%= customer.username%>" disabled>
+                      <input type="text" class="form-control" id="username" name="username" value="<%= customer.username%>" disabled>
                       <label for="username">Username</label>
                     </div>
                   </div>
                 </div>
-
+              
                 <div class="row">
                   <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                      <input type="tel" class="form-control" id="phone-number" name="phone" value="<%= customer.phone%>"
-                        pattern="[0-9]{10}" required>
+                      <input type="tel" class="form-control" id="phone-number" name="phone" value="<%= customer.phone%>" pattern="[0-9]{10}" required>
                       <label for="phone-number">Phone number</label>
                     </div>
                   </div>
                   <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
-                      <input type="email" class="form-control" id="email" name="email" value="<%= customer.email%>"
-                        disabled>
+                      <input type="email" class="form-control" id="email" name="email" value="<%= customer.email%>" disabled>
                       <label for="email">Email</label>
                     </div>
                   </div>
                 </div>
-
+              
                 <div class="row">
                   <div class="col-12 col-sm-4">
                     <div class="form-floating mb-4">
-
-                      <select id="role" class="form-select selectpicker" value="<%= customer.role%>" name="role"
-                        data-width="auto" disabled>
-                        <option selected value="customer"> customer </option>
-                        <option value="cadet"> cadet </option>
-                        <option value="admin"> Admin </option>
+                      <select id="role" class="form-select selectpicker" value="<%= customer.role%>" name="role" data-width="auto" disabled>
+                        <option selected value="customer">customer</option>
+                        <option value="cadet">cadet</option>
+                        <option value="admin">Admin</option>
                       </select>
                       <label for="role">Role</label>
                     </div>
                   </div>
-
+              
                   <div class="col-12 col-sm-4">
                     <div class="form-floating mb-3">
-                      <select id="gender" class="form-select selectpicker" placeholder="Gender" name="gender"
-                        data-width="auto" required>
-
-                       
-                        <% if(customer.gender==='male' )  {%>
-                          <option selected value="male"> Male </option>
-                          <option value="female"> Female </option>
-                          <option value="other"> Other </option>
-
-                          <%} else if (customer.gender=='female' ) {%>
-                            <option value="male"> Male </option>
-                            <option selected value="female"> Female </option>
-                            <option value="other"> Other </option>
-                            <% } else {%>
-                              <option value="male"> Male </option>
-                              <option value="female"> Female </option>
-                              <option selected value="other"> Other </option>
-                              <% }%>
+                      <select id="gender" class="form-select selectpicker" name="gender" data-width="auto" required>
+                        <% if(customer.gender === 'male') { %>
+                        <option selected value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <% } else if (customer.gender === 'female') { %>
+                        <option value="male">Male</option>
+                        <option selected value="female">Female</option>
+                        <option value="other">Other</option>
+                        <% } else { %>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option selected value="other">Other</option>
+                        <% } %>
                       </select>
                       <label for="gender">Gender</label>
                     </div>
                   </div>
-
+              
                   <div class="col-12 col-sm-4">
                     <div class="form-floating mb-3">
-                      <input type="date" class="form-control" id="birthdate"
-                        value="<%= customer.date.toISOString().slice(0 ,10)%>" name="date" placeholder="somedate" max="9999-12-31"
-                        required>
+                      <input type="date" class="form-control" id="birthdate" name="date" value="<%= customer.date.toISOString().slice(0, 10)%>" placeholder="somedate" max="9999-12-31" required>
                       <label for="birthdate">Birth date</label>
                     </div>
                   </div>
                 </div>
-
-
-                <div class="text-center my-4 text-center">
+              
+                <div class="row">
+                  <div class="col-12 col-sm-12">
+                      <div class="form-floating mb-3">
+                          <input type="file" class="form-control" id="image" name="image" accept=".jpeg, .jpg, .png">
+                          <label for="image">Profile Image (JPEG, JPG, PNG)</label>
+                      </div>
+                  </div>
+                </div>
+              
+                <div class="text-center my-4">
                   <button class="btn btn-primary px-3" type="submit">Submit</button>
-              </div>
-
+                </div>
               </form>
+              
 
             </div>
 

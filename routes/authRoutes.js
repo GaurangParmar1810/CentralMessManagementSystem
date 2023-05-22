@@ -39,7 +39,7 @@ router.post('/signup',upload.single('image'), authController.signup_post);
 router.get('/customer/:username', requireAuth, authController.customer_get);
 
 router.get('/customer/:username/edit', requireAuth, authController.customer_edit_get);
-router.patch('/customer/:username/edit', requireAuth, authController.customer_edit_patch);
+router.patch('/customer/:username/edit', requireAuth, upload.single('image'), authController.customer_edit_patch);
 
 router.get('/customer/:username/view', requireAuth, authController.customer_view_get);
 
