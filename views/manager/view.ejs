@@ -16,10 +16,14 @@
                             <thead>
                               <tr>
                                 <div class="profile my-4 table-striped-columns">
-                                  <div class="mb-3"><img src="/photos/person_logo.svg" alt="person" width="20%"></div>
-                                  <div class="fs-3"><%= manager.fullname%></div>
-                                  <div class="fs-5">Manager</div>
-                                </div>
+                                    <div class="mb-3">
+                                      <a href="/uploads/<%= manager.profileImage %>" data-lightbox="profile-image">
+                                        <img src="/uploads/<%= manager.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                                      </a>
+                                    </div>
+                                    <div class="fs-3"><%= manager.fullname %></div>
+                                    <div class="fs-5">Manager</div>
+                                  </div> 
                               </tr>
                             </thead>
                             <tbody>

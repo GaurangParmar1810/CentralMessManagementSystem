@@ -55,7 +55,7 @@ router.get('/customer/:username/paymenthistory', requireAuth, authController.cus
 router.get('/manager/:username', requireAuth, authController.manager_get);
 
 router.get('/manager/:username/edit', requireAuth, authController.manager_edit_get);
-router.patch('/manager/:username/edit', requireAuth, authController.manager_edit_patch);
+router.patch('/manager/:username/edit', requireAuth, upload.single('image'), authController.manager_edit_patch);
 
 router.get('/manager/:username/view', requireAuth, authController.manager_view_get);
 

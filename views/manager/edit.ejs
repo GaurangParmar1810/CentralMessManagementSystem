@@ -14,12 +14,14 @@
                 <thead>
                   <tr>
                     <div class="profile my-4 table-striped-columns">
-                      <div class="mb-3"><img src="/photos/person_logo.svg" alt="person" width="20%"></div>
-                      <div class="fs-3">
-                        <%= manager.fullname%>
+                      <div class="mb-3">
+                        <a href="/uploads/<%= manager.profileImage %>" data-lightbox="profile-image">
+                          <img src="/uploads/<%= manager.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                        </a>
                       </div>
+                      <div class="fs-3"><%= manager.fullname %></div>
                       <div class="fs-5">Manager</div>
-                    </div>
+                    </div> 
                   </tr>
                 </thead>
                 <tbody>
@@ -124,7 +126,7 @@
               <div class="text-center mb-5 text-dark">Fill the details mentioned.</div>
 
             
-                  <form action="/manager/<%= manager.username%>/edit?_method=patch" method="post">
+                  <form action="/manager/<%= manager.username%>/edit?_method=patch" method="post" enctype="multipart/form-data">
 
                     <div class="row">
                       <div class="col-12 col-sm-6">
@@ -205,7 +207,14 @@
                         </div>
                       </div>
                     </div>
-
+                    <div class="row">
+                      <div class="col-12 col-sm-12">
+                          <div class="form-floating mb-3">
+                              <input type="file" class="form-control" id="image" name="image" accept=".jpeg, .jpg, .png">
+                              <label for="image">Profile Image (JPEG, JPG, PNG)</label>
+                          </div>
+                      </div>
+                    </div>
 
                     <div class="text-center mt-5 mb-4 text-center">
                       <button class="btn btn-primary px-3" type="submit">Submit</button>
