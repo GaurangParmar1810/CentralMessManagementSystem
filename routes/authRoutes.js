@@ -99,7 +99,7 @@ router.patch('/cadet/:username/changepassword', requireAuth, authController.cade
 
 router.get('/cadet/:username', requireAuth, authController.cadet_get);
 router.get('/cadet/:username/edit', requireAuth, authController.cadet_edit_get);
-router.patch('/cadet/:username/edit', requireAuth, authController.cadet_edit_patch);
+router.patch('/cadet/:username/edit', requireAuth, upload.single('image'), authController.cadet_edit_patch);
 
 router.get('/cadet/:username/viewinventory', requireAuth, authController.cadet_viewinventory_get);
 

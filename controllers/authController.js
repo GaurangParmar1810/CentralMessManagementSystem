@@ -1736,8 +1736,38 @@ const cadet_edit_patch = async (req, res) => {
                 return res.status(500).render('cadet/edit', { customer, err: 'Invalid birth date.' });
             }
 
+            if (req.file) {
+                // Check if the image is not the default image
+                if (cadet.profileImage !== 'person_logo.svg') {
+                  // Delete the pre-existing image
+    
+                  //deleting pre-existing image
+                  const imagePathToDelete = path.join(__dirname, '..', 'public', 'uploads', cadet.profileImage);
+                  fs.unlinkSync(imagePathToDelete);              
+                }
+                //now storing the another image
+                const image = sharp(req.file.path);
+                const imageInfo = await image.metadata();
+    
+                // Process the uploaded image, such as resizing and format conversion
+                const resizedImage = image.resize({ width: 200, height: 200 }).jpeg({ quality: 80 });
+    
+                // Generate a unique filename for the processed image
+                const filename = `profile_${Date.now()}.jpg`;
+                console.log(filename);
+                console.log("Gauranng");
+                // Save the processed image
+                const imagePath = path.join(__dirname, '..', 'public', 'uploads', filename);
+                await resizedImage.toFile(imagePath);
+    
+                cadet.profileImage = filename;
+    
+                // Delete the original uploaded image file
+                fs.unlinkSync(req.file.path);
+            }
+
             User.updateOne({ username: username, role: 'cadet' },
-                { $set: { fullname: req.body.fullname, date: req.body.date, phone: req.body.phone, gender: req.body.gender }, validate: true })
+                { $set: { fullname: req.body.fullname, date: req.body.date, phone: req.body.phone, gender: req.body.gender,profileImage:cadet.profileImage }, validate: true })
                 .then((result) => {
                     res.render('cadet/index', { cadet: cadet, err: 'Profile updated Successfully.' });
                 })

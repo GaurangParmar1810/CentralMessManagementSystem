@@ -18,10 +18,14 @@
                                 <thead>
                                     <tr>
                                         <div class="profile my-4 table-striped-columns">
-                                            <div class="mb-3"><img src="/photos/person_logo.svg" alt="person" width="20%"></div>
-                                            <div class="fs-3"><%= cadet.fullname%></div>
+                                            <div class="mb-3">
+                                              <a href="/uploads/<%= cadet.profileImage %>" data-lightbox="profile-image">
+                                                <img src="/uploads/<%= cadet.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                                              </a>
+                                            </div>
+                                            <div class="fs-3"><%= cadet.fullname %></div>
                                             <div class="fs-5">Cadet</div>
-                                        </div>
+                                          </div>
                                     </tr>
                                 </thead>
                                 <tbody>
