@@ -7,7 +7,9 @@ const Payment = require('../models/payment');
 const Paymenthistory = require('../models/paymenthistory');
 const Managercheck = require('../models/managercheck');
 const validator = require('validator');
-
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
 
 
@@ -205,8 +207,9 @@ const signup_get = (req, res) => {
     const err = undefined;
     res.render('signup', { err });
 }
+
 const signup_post = async (req, res) => {
-    try {
+    // try {
         const password = req.body.password;
         const cpassword = req.body.cpassword;
 
@@ -257,10 +260,28 @@ const signup_post = async (req, res) => {
 
             // Check if an image file was uploaded
             if (req.file) {
-                const profileImage = req.file.filename;
-                user.profileImage = profileImage;
+                // const profileImage = req.file.filename;
+                // user.profileImage = profileImage;
+                const image = sharp(req.file.path);
+                const imageInfo = await image.metadata();
+
+                // Process the uploaded image, such as resizing and format conversion
+                const resizedImage = image.resize({ width: 200, height: 200 }).jpeg({ quality: 80 });
+
+                // Generate a unique filename for the processed image
+                const filename = `profile_${Date.now()}.jpg`;
+                console.log(filename);
+                console.log("Gauranng");
+                // Save the processed image
+                const imagePath = path.join(__dirname, '..', 'public', 'uploads', filename);
+                await resizedImage.toFile(imagePath);
+
+                user.profileImage = filename;
+
+                // Delete the original uploaded image file
+                fs.unlinkSync(req.file.path);
             } else {
-                const defaultProfileImage = 'photos/user.jpg';
+                const defaultProfileImage = 'person_logo.svg';
                 user.profileImage = defaultProfileImage;
             }
   
@@ -281,9 +302,9 @@ const signup_post = async (req, res) => {
             res.status(500).render('signup', { err: "Password are not matching." });
         }
 
-    } catch (error) {
-        res.status(404).render('404', { err: "Signup_post error" });
-    }
+    // } catch (error) {
+    //     res.status(404).render('404', { err: "Signup_post error" });
+    // }
 }
 //----------------------Functions for forget password-----------------------------
 

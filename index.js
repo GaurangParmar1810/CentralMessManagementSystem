@@ -9,7 +9,7 @@ const path = require('path');
 // const dbURI = 'mongodb+srv://gaurang:gaurang@cluster0.olbixf6.mongodb.net/dummy?retryWrites=true&w=majority';
 const dbURI = process.env.MONGODB_URI;
 const authRoutes = require('./routes/authRoutes');
-
+const sharp = require('sharp');
 // async function validatepassword(password) {
 //     if (password.length < 6 || password.length > 16) {
 //         return false;
