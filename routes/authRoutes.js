@@ -31,6 +31,7 @@ router.patch('/resetpassword/:id', authController.resetpassword_patch);
 router.get('/signup', authController.signup_get);
 router.get('/about', authController.about_get);
 router.get('/faq', authController.faq_get);
+router.get('/locateus', authController.locateus_get);
 
 
 
@@ -84,6 +85,8 @@ router.get('/manager/:username/managercheck', requireAuth, authController.manage
 router.post('/manager/:username/managercheck', requireAuth, authController.manager_managercheck_post);
 
 
+router.get('/manager/:username/viewuser', requireAuth, authController.manager_viewuser_get);
+
 router.get('/manager/:username/deleteuser', requireAuth, authController.manager_deleteuser_get);
 router.delete('/manager/:username/deleteuser', requireAuth, authController.manager_deleteuser_delete);
 
@@ -92,6 +95,9 @@ router.post('/manager/:username/viewpaymenthistorygraph', requireAuth, authContr
 
 router.get('/manager/:username/viewpaymenthistory', requireAuth, authController.manager_viewpaymenthistory_get);
 router.post('/manager/:username/viewpaymenthistory', requireAuth, authController.manager_viewpaymenthistory_post);
+
+router.get('/manager/:username/changemesslocation', requireAuth, authController.manager_changemesslocation_get);
+router.patch('/manager/:username/changemesslocation', requireAuth, authController.manager_changemesslocation_patch);
 
 router.get('/cadet/:username/view', requireAuth, authController.cadet_viewprofile_get);
 router.get('/cadet/:username/changepassword', requireAuth, authController.cadet_changepassword_get);
@@ -112,7 +118,9 @@ router.get('/cadet/:username/faq', requireAuth, authController.cadet_faq_get);
 router.get('/customer/:username/about', requireAuth, authController.customer_about_get);
 router.get('/manager/:username/about', requireAuth, authController.manager_about_get);
 router.get('/cadet/:username/about', requireAuth, authController.cadet_about_get);
-
+router.get('/customer/:username/locateus', requireAuth, authController.customer_locateus_get);
+router.get('/manager/:username/locateus', requireAuth, authController.manager_locateus_get);
+router.get('/cadet/:username/locateus', requireAuth, authController.cadet_locateus_get);
 router.get('/verify/:id', authController.verifyMail);
 
 router.get('/add-user', authController.add_user_get);

@@ -1,0 +1,71 @@
+<%- include('../partials/header_locateus') %>
+
+<div id="wrapper">
+
+    <%- include('../partials/nav_home_manager') %>
+    
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="map"></div>
+          </div>
+        </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js"></script>
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
+        type="text/css" />
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoidmVuaWwxMCIsImEiOiJjbGg2b2FlaTIwMHRoM2RvY2k0bnRibTZhIn0.LDcg9rGCcMMwupx-7qajLg';
+
+        // Get user's current location
+        navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {enableHighAccuracy: true});
+
+        function successLocation(position) {
+        var userLongitude = position.coords.longitude;
+        var userLatitude = position.coords.latitude;
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/venil10/clgt7c00m002y01pghuwe3qzu',
+            center: [<%= messlocation.longitude %>, <%= messlocation.latitude %>],
+            zoom: 15
+        });
+        // Add a marker for the user's current location
+        var marker = new mapboxgl.Marker()
+            .setLngLat([userLongitude, userLatitude])
+            .addTo(map);
+
+        var directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            unit: 'metric',
+            interactive: false,
+            profile: 'mapbox/driving-traffic',
+            alternatives: true,
+            controls: {
+            inputs: false,
+            },
+        });
+
+        // Set the user's current location as point A
+        directions.setOrigin([userLongitude, userLatitude]);
+
+        // Set the destination as point B
+        directions.setDestination([<%= messlocation.longitude %>, <%= messlocation.latitude %>]);
+
+        var destinationMarker = new mapboxgl.Marker()
+            .setLngLat([<%= messlocation.longitude %>, <%= messlocation.latitude %>])
+            .addTo(map);
+
+        map.addControl(directions, 'top-left');
+        }
+        function errorLocation() {
+        // Handle error when getting user's location
+        console.log('Unable to retrieve your location.');
+        }
+    </script>
+    
+    <%- include('../partials/footer') %>

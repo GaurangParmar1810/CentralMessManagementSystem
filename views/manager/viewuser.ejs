@@ -1,0 +1,336 @@
+<%- include('../partials/header_manager') %>
+
+
+  <div id="wrapper">
+
+    <%- include('../partials/nav_home_manager') %>
+
+
+
+      <div class="container">
+
+
+        <div class="row mb-5">
+          <div class="col-12 col-lg-3">
+            <div class="list-group text-center make-sticky ">
+
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <div class="profile my-4 table-striped-columns">
+                      <div class="mb-3">
+                        <a href="/uploads/<%= manager.profileImage %>" data-lightbox="profile-image">
+                          <img src="/uploads/<%= manager.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                        </a>
+                      </div>
+                      <div class="fs-3"><%= manager.fullname %></div>
+                      <div class="fs-5">Manager</div>
+                    </div> 
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr class="table-active">
+                    <td><a href="/manager/<%= manager.username%>"
+                        class="list-group-item list-group-item-action">Home</a></td>
+                  </tr>
+
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/view"
+                        class="list-group-item list-group-item-action">View
+                        profile</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/edit"
+                        class="list-group-item list-group-item-action">Edit
+                        Profile</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/changepassword"
+                        class="list-group-item list-group-item-action">Change
+                        password</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/addpayment"
+                        class="list-group-item list-group-item-action">Add Payment</a></td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/viewfeedback"
+                        class="list-group-item list-group-item-action">View Feedback</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/viewinventory"
+                        class="list-group-item list-group-item-action">View inventory</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/inventoryupgrade"
+                        class="list-group-item list-group-item-action">Edit inventory</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/inventorydegrade"
+                        class="list-group-item list-group-item-action">Remove inventory</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/changemesslocation"
+                        class="list-group-item list-group-item-action">Change Mess Location</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/managercheck"
+                        class="list-group-item list-group-item-action">Customer checklist</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/viewpaymenthistory"
+                        class="list-group-item list-group-item-action">View payment history</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/viewpaymenthistorygraph"
+                        class="list-group-item list-group-item-action">View Payment Statistics</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a href="/manager/<%= manager.username%>/deleteuser"
+                        class="list-group-item list-group-item-action">Remove Customer/cadet</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+          <div class="col-12 col-lg-9">
+
+            <% if(err) {%>
+
+              <% if(err.includes("Success") || err.includes("success") || err.includes("Successfully") ||
+                err.includes("successfully") || err.includes("Successfull") || err.includes("successfull") ) {%>
+                <div class="container">
+                  <div class="container  px-2 rounded-1 text-center">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <%=err %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+                </div>
+                <% } else { %>
+
+                  <div class="container">
+                    <div class="container px-2 rounded-1 text-center">
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%=err %>
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+                    <% } %>
+                      <div class="container">
+                        <div class="container mb-5">
+                          <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                              <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                  Customers
+                                </button>
+                              </h2>
+                              <div id="collapseOne" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  
+                                    <div class="container border rounded-5 p-5">
+                                                <div class="row mb-5">
+                                                    <div class="col text-center fs-3">
+                                                        Here are the customer list.
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row mb-4">
+                                                    <div class="col-sm-1"></div>
+                                                    <div class="col-12  col-sm-5 mb-3 mb-sm-0">
+                                                        <a class="btn btn-primary"
+                                                            href="/manager/<%= manager.username%>/viewcustomer"
+                                                            role="button">View all</a>
+                                                    </div>
+                                                    <div class="col-0 col-sm-1"></div>
+                                                    <div class="col-12 col-sm-4">
+                                                        <form
+                                                            action="/manager/<%= manager.username%>/viewcustomer"
+                                                            method="post">
+                                                            <div class="row">
+                                                                <div class="col-9">
+
+                                                                    <div class="form-floating ">
+                                                                        <input type="text" class="form-control"
+                                                                            id="username" name="username"
+                                                                            placeholder="something" required>
+                                                                        <label for="username">User name</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-1">
+                                                                    <div class="text-center">
+                                                                        <button class="btn btn-primary mt-2"
+                                                                            type="submit">Apply</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                <table class="table text-center table-hover border">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">User name</th>
+                                                            <th scope="col">Profile Image</th>
+                                                            <th scope="col">Full name</th>
+                                                            <th scope="col">Email</th>
+                                                            <th scope="col">Phone number</th>
+                                                            <th scope="col">Gender</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <%if(customers){%>
+                                                            <% for(const i of customers) {%>
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= i.username %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <img src="/uploads/<%= i.profileImage %>"
+                                                                            alt="person" width="50%"
+                                                                            class="rounded-circle">
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= i.fullname %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= i.email%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= i.phone %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= i.gender %>
+                                                                    </td>
+                                                                </tr>
+                                                                <%}%>
+                                                                    <%}%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                    </div>
+
+
+
+                                </div>
+                              </div>
+                            </div>
+                            <div class="accordion-item">
+                              <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                  Cadet
+                                </button>
+                              </h2>
+                              <div id="collapseTwo" class="accordion-collapse collapse"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                  
+                                    <div class="container border rounded-5 p-5">
+                                        <div class="row mb-5">
+                                            <div class="col text-center fs-3">
+                                            Here is the Cadet's list.
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4">
+                                            <div class="col-sm-1"></div>
+                                            <div class="col-12 col-sm-5 mb-3 mb-sm-0">
+                                            <a class="btn btn-primary" href="/manager/<%= manager.username%>/viewcustomer" role="button">View all</a>
+                                            </div>
+                                            <div class="col-12 col-sm-4">
+                                            <form action="/manager/<%= manager.username%>/viewcadet" method="post">
+                                                <div class="row">
+                                                <div class="col-9">
+                                                    <div class="form-floating">
+                                                    <input type="text" class="form-control" id="username" name="username" placeholder="something" required>
+                                                    <label for="username">User name</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3 col-sm-2">
+                                                    <div class="text-center">
+                                                    <button class="btn btn-primary mt-2" type="submit">Apply</button>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </form>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table text-center table-hover border">
+                                            <thead>
+                                                <tr>
+                                                <th scope="col">User name</th>
+                                                <th scope="col">Profile Image</th>
+                                                <th scope="col">Full name</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Phone number</th>
+                                                <th scope="col">Gender</th>
+                                                <th scope="col">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if (cadets) { %>
+                                                <% for (const i of cadets) { %>
+                                                <tr>
+                                                <td><%= i.username %></td>
+                                                <td><img src="/uploads/<%= i.profileImage %>" alt="person" width="50%" class="rounded-circle"></td>
+                                                <td><%= i.fullname %></td>
+                                                <td><%= i.email %></td>
+                                                <td><%= i.phone %></td>
+                                                <td><%= i.gender %></td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <i class="fas fa-pencil-alt edit-icon" onclick="editUser('<%= i.username %>')" style="margin-right: 10px; color: blue; cursor: pointer;"></i>
+                                                        <i class="fas fa-trash-alt delete-icon" onclick="deleteUser('<%= i.username %>')" style="color: red; cursor: pointer;"></i>
+                                                    </div>
+                                                    </td>
+
+
+                                                </tr>
+                                                <% } %>
+                                                <% } %>
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+
+
+
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+          </div>
+        </div>
+      </div>
+
+      <%- include('../partials/footer') %>

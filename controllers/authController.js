@@ -1,11 +1,15 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+
+
 const User = require('../models/user');
 const Inventory = require('../models/inventory');
 const Feedback = require('../models/feedback');
 const Payment = require('../models/payment');
 const Paymenthistory = require('../models/paymenthistory');
 const Managercheck = require('../models/managercheck');
+const Messlocation = require('../models/messlocation');
+
 const validator = require('validator');
 const sharp = require('sharp');
 const path = require('path');
@@ -712,7 +716,7 @@ const manager_edit_get = async (req, res) => {
     }
 }
 const manager_edit_patch = async (req, res) => {
-    try {
+    // try {
         const { username } = req.params; // use req.params.username to get the username
         const manager = await User.findOne({ username: username, role: 'manager' });
 
@@ -780,12 +784,12 @@ const manager_edit_patch = async (req, res) => {
             }
             );
 
-    } catch (error) {
-        res.status(404).render('404', { err: `manager_edit_patch error` });
+    // } catch (error) {
+    //     res.status(404).render('404', { err: `manager_edit_patch error` });
 
-        // console.log(error);
-        // res.send('An error occurred while finding the manager.');
-    }
+    //     // console.log(error);
+    //     // res.send('An error occurred while finding the manager.');
+    // }
 }
 
 const manager_view_get = async (req, res) => {
@@ -1216,8 +1220,6 @@ const manager_inventorydegrade_patch = async (req, res) => {
     }
 }
 
-
-
 const manager_addpayment_get = async (req, res) => {
     try {
         const username = req.params.username;
@@ -1244,7 +1246,6 @@ const manager_addpayment_get = async (req, res) => {
     }
 
 }
-
 
 const manager_addpayment_post = async (req, res) => {
     try {
@@ -1459,7 +1460,6 @@ const manager_deleteuser_delete = async (req, res) => {
     }
 }
 
-
 const manager_paymenthistorygraph_get = async (req, res) => {
     try {
         const username = req.params.username;
@@ -1514,7 +1514,6 @@ const manager_paymenthistorygraph_get = async (req, res) => {
     }
 };
 
-
 const manager_paymenthistorygraph_post = async (req, res) => {
     try {
         const username = req.params.username;
@@ -1568,7 +1567,6 @@ const manager_paymenthistorygraph_post = async (req, res) => {
     }
 };
 
-
 const manager_viewpaymenthistory_get = async (req, res) => {
     try {
         const username = req.params.username;
@@ -1611,6 +1609,27 @@ const manager_viewpaymenthistory_post = async (req, res) => {
     }
 }
 
+const manager_viewuser_get = async (req, res) => {
+    try {
+        const username = req.params.username;
+
+        const manager = await User.findOne({ username: username, role: 'manager' });
+        if (manager) {
+            const customers = await User.find({ role: 'customer' });
+            const cadets = await User.find({ role: 'cadet' });
+            res.render('manager/viewuser', { manager, customers, cadets, err: undefined });
+        }
+        else {
+            // res.send("Manager not found");
+            res.status(404).render('404', { err: 'Manager not found' });
+        }
+        
+    } catch (error) {
+        // console.log(error);
+        res.status(404).render('404', { err: 'manager_viewuser_get error' });
+    }
+}
+
 const cadet_viewprofile_get = async (req, res) => {
     try {
         const username = req.params.username;
@@ -1625,6 +1644,67 @@ const cadet_viewprofile_get = async (req, res) => {
     } catch (error) {
         // console.log(error);
         res.status(404).render('404', { err: 'cadet_viewprofile_get error' });
+    }
+}
+
+const manager_changemesslocation_get = async(req,res)=>{
+    // try {
+        const username = req.params.username;
+        const manager = await User.findOne({ username: username, role: 'manager' });
+        if (manager) {
+            let messlocation = await Messlocation.findOne();
+            if(messlocation == null){
+                messlocation = new Messlocation({
+                    longitude: 0,
+                    latitude: 0
+                });
+                const response = await messlocation.save();
+            }
+
+            res.render('manager/changemesslocation', { manager: manager, messlocation: messlocation, err: undefined });
+        }
+        else {
+            // res.send("Manager not found");
+            res.status(404).render('404', { err: 'Manager not found' });
+        }
+    // } catch (error) {
+    //     // console.log(error);
+    //     res.status(404).render('404', { err: 'manager_changemesslocation_get error' });
+    // }
+}
+
+
+const manager_changemesslocation_patch = async(req,res)=>{
+    try {
+        const username = req.params.username;
+        const manager = await User.findOne({ username: username, role: 'manager' });
+        if (manager) {
+            const {longitude,latitude} = req.body;
+            
+            console.log(longitude, "  Gaurang  " ,latitude);
+            const messlocation = {
+                longitude: longitude,
+                latitude: latitude
+            };
+            Messlocation.updateOne({},{ $set: { longitude: longitude, latitude: latitude } })
+            .then((result) => {
+                // console.log(result);
+                res.render('manager/changemesslocation', { manager: manager, err: 'Mess location updated Successfully.' });
+                // res.send("Updated successfully");
+            })
+            .catch((error) => {
+                // console.log(error);
+                // res.send("In 1st catch");
+                res.status(404).render('404', { err: 'Mess location not updated' });
+            });
+        }
+        else {
+            // res.send("Manager not found");
+            res.status(404).render('404', { err: 'Manager not found' });
+        }
+    } catch (error) {
+        // console.log(error);
+        res.status(404).render('404', { err: 'manager_changemesslocation_patch error' });
     }
 }
 
@@ -1964,8 +2044,77 @@ const add_user_get = (req, res) => {
 
 };
 
+const locateus_get = async (req, res) => {
+    try {
+        const messlocation = await Messlocation.findOne();
+        if (messlocation) {
+            console.log(messlocation);
+            res.render('locateus', { messlocation: messlocation });
+        }
+        else {
+            res.status(404).render('404', { err: 'Mess location not found' });
+        }
+    } catch (error) {
+        res.status(404).render('404', { err: 'locateus_get error' });
+    }
+}
 
+const customer_locateus_get = async (req, res) => {
+    try {
+        const username = req.params.username;
+        const customer = await User.findOne({ username: username, role: 'customer' });
+        const messlocation = await Messlocation.findOne();
+        if (customer) {
+            res.render('customer/locateus', { customer: customer, messlocation: messlocation, err : undefined });
+        }
+        else {
+            // res.send('An error occurred while finding the customer.');
+            res.status(404).render('404', { err: 'An error occurred while finding the customer.' });
+        }
+    } catch (error) {
+        // console.log(error);
+        // res.send('An error occurred while finding the customer.');
+        res.status(404).render('404', { err: 'customer_locateus_get error' });
+    }
+}
 
+const manager_locateus_get = async (req, res) => {
+    try {
+        const username = req.params.username;
+        const manager = await User.findOne({ username: username, role: 'manager' });
+        const messlocation = await Messlocation.findOne();
+        if (manager) {
+            res.render('manager/locateus', { manager: manager, messlocation: messlocation, err : undefined });
+        }
+        else {
+            // res.send('An error occurred while finding the manager.');    
+            res.status(404).render('404', { err: 'An error occurred while finding the manager.' });
+        }
+    } catch (error) {
+        // console.log(error);
+        // res.send('An error occurred while finding the manager.');
+        res.status(404).render('404', { err: 'manager_locateus_get error' });
+    }
+}
+
+const cadet_locateus_get = async (req, res) => {
+    try {
+        const username = req.params.username;
+        const cadet = await User.findOne({ username: username, role: 'cadet' });
+        const messlocation = await Messlocation.findOne();
+        if (cadet) {
+            res.render('cadet/locateus', { cadet: cadet, messlocation: messlocation, err : undefined });
+        }
+        else {
+            // res.send('An error occurred while finding the cadet.');
+            res.status(404).render('404', { err: 'An error occurred while finding the cadet.' });
+        }
+    } catch (error) {
+        // console.log(error);
+        // res.send('An error occurred while finding the cadet.');
+        res.status(404).render('404', { err: 'cadet_locateus_get error' });
+    }
+}
 
 const logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });
@@ -1995,6 +2144,7 @@ module.exports = {
     customer_paymenthistory_get,
     customer_about_get,
     customer_faq_get,
+    customer_locateus_get,
 
     manager_get,
     manager_edit_get,
@@ -2024,8 +2174,12 @@ module.exports = {
     manager_paymenthistorygraph_post,
     manager_viewpaymenthistory_get,
     manager_viewpaymenthistory_post,
+    manager_viewuser_get,
+    manager_changemesslocation_get,
+    manager_changemesslocation_patch,
     manager_about_get,
     manager_faq_get,
+    manager_locateus_get,
     about_get,
     faq_get,
 
@@ -2039,11 +2193,13 @@ module.exports = {
     cadet_viewinventory_get,
     cadet_about_get,
     cadet_faq_get,
+    cadet_locateus_get,
 
 
     verifyMail,
     sendVerifyMail,
-    logout_get
+    logout_get,
+    locateus_get
 
 
 };

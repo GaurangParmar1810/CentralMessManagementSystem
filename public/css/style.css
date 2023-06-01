@@ -92,3 +92,8 @@ input {
     text-align: center;
   }
   
+  #map {
+    height: 63vh;
+    width: 100%;
+    border-radius: 10px;
+  }

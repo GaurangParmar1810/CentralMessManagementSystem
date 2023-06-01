@@ -60,6 +60,7 @@
                         class="list-group-item list-group-item-action">View inventory</a>
                     </td>
                   </tr>
+                  
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/inventoryupgrade"
                         class="list-group-item list-group-item-action">Edit inventory</a>
@@ -70,11 +71,13 @@
                         class="list-group-item list-group-item-action">Remove inventory</a>
                     </td>
                   </tr>
-                  <tr>
+
+                  <tr class="table-active">
                     <td><a href="/manager/<%= manager.username%>/changemesslocation"
                         class="list-group-item list-group-item-action">Change Mess Location</a>
                     </td>
                   </tr>
+
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/managercheck"
                         class="list-group-item list-group-item-action">Customer checklist</a>
@@ -90,7 +93,7 @@
                         class="list-group-item list-group-item-action">View Payment Statistics</a>
                     </td>
                   </tr>
-                  <tr class="table-active">
+                  <tr >
                     <td><a href="/manager/<%= manager.username%>/deleteuser"
                         class="list-group-item list-group-item-action">Remove Customer/cadet</a>
                     </td>
@@ -129,32 +132,52 @@
           </div>
             <% } %>
             <% } %>
-              <div class="container border mt-3 col-md-8 col-xl-6 px-5 py-4 mb-5 my-5 rounded-5">
-                  <div class="text-center fs-2 m-4">Delete User</div>
+              <div class="container border mt-3 col-md-8 col-xl-12 px-5 py-4 mb-5 my-5 rounded-5">
+                  <div class="text-center fs-2 m-4">Change Location</div>
 
 
-                  <form action="/manager/<%= manager.username%>/deleteuser?_method=delete" method="post">
+                  <form action="/manager/<%= manager.username%>/changemesslocation?_method=patch" method="post">
+                    
+
+                    <div class="row d-flex align-items-center justify-content-center">
+                      <div class="col-12 col-sm-9">
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" id="location" name="location"
+                            placeholder="Enter location" required>
+                          <label for="location">Location:</label>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-3">
+                        <div class="form-floating mb-3">
+                          <button type="button" class="btn btn-primary" onclick="searchLocation()">Search</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-12 col-sm-6">
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" name="longitude" id="longitude" placeholder="Longitude" readonly>
+                          <label for="longitude">Longitude:</label>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6">
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control" name="latitude" id="latitude" placeholder="Latitude" readonly>
+                          <label for="latitude">Latitude:</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    
+
                     <div class="form-floating my-4">
-                      <input type="text" class="form-control" id="username" name="username" placeholder="s">
-                      <label for="username">Username</label>
+                        <label for="map">Map:</label>
+                        <div id="map"></div>
                     </div>
 
-                    <div class="form-floating mb-3">
-                      <select id="role" class="form-select" selectpicker placeholder="role" data-width="auto"
-                        name="role" required>
-                        <option selected value="customer"> Customer </option>
-                        <option value="cadet"> Cadet </option>
-                      </select>
-                      <label for="role">Role</label>
-                    </div>
-
-                    <div class="form-floating my-4">
-                      <input type="password" class="form-control" id="password" name="password" placeholder="password">
-                      <label for="password">Password</label>
-                    </div>
-
-                    <div class="text-center my-4">
-                      <button class="btn btn-primary mt-4 col-3" type="submit">Remove</button>
+                    <div class="text-center mt-5 mb-4 text-center">
+                      <button class="btn btn-primary px-3" type="submit">Submit</button>
                     </div>
                   </form>
                 </div>
@@ -165,4 +188,109 @@
 
         </div>
 
-        <%- include('../partials/footer') %>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js"></script>
+        <script src=' https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js'>
+        </script>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoidmVuaWwxMCIsImEiOiJjbGg2b2FlaTIwMHRoM2RvY2k0bnRibTZhIn0.LDcg9rGCcMMwupx-7qajLg';
+
+            var defaultLocation = [<%= messlocation.longitude %>, <%= messlocation.latitude %>]; // Default location coordinates
+
+            var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/venil10/clgt7c00m002y01pghuwe3qzu',
+            center: defaultLocation,
+            zoom: 13
+            });
+
+            // Add the default marker
+            var marker = new mapboxgl.Marker()
+            .setLngLat(defaultLocation)
+            .addTo(map);
+
+            var searchInput = document.getElementById('location');
+            var latitudeInput = document.getElementById('latitude');
+            var longitudeInput = document.getElementById('longitude');
+            var marker;
+
+            function searchLocation() {
+            var location = searchInput.value;
+
+            if (location.trim() === '') {
+                return;
+            }
+
+            var geocodeUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(location) +
+                '.json?access_token=' + mapboxgl.accessToken;
+
+            fetch(geocodeUrl)
+                .then(function(response) {
+                return response.json();
+                })
+                .then(function(data) {
+                if (data.features.length === 0) {
+                    latitudeInput.value = '';
+                    longitudeInput.value = '';
+                    console.log('Location not found');
+                    return;
+                }
+
+                var coordinates = data.features[0].center;
+                latitudeInput.value = coordinates[1];
+                longitudeInput.value = coordinates[0];
+
+                if (marker) {
+                    marker.remove();
+                }
+
+                marker = new mapboxgl.Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+
+                map.flyTo({
+                    center: coordinates,
+                    zoom: 12
+                });
+                })
+                .catch(function(error) {
+                console.log('Error:', error);
+                });
+            }
+
+            map.on('click', function(e) {
+            var coordinates = e.lngLat;
+            var reverseGeocodeUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + coordinates.lng + ',' +
+                coordinates.lat + '.json?access_token=' + mapboxgl.accessToken;
+
+            fetch(reverseGeocodeUrl)
+                .then(function(response) {
+                return response.json();
+                })
+                .then(function(data) {
+                if (data.features.length === 0) {
+                    return;
+                }
+
+                var name = data.features[0].place_name;
+                searchInput.value = name;
+                latitudeInput.value = coordinates.lat;
+                longitudeInput.value = coordinates.lng;
+
+                if (marker) {
+                    marker.remove();
+                }
+
+                marker = new mapboxgl.Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+                })
+                .catch(function(error) {
+                console.log('Error:', error);
+                });
+            });
+
+        </script>
+
+        <%- include('../partials/footer') %>    
