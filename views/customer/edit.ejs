@@ -94,8 +94,9 @@
               <div class="text-center mb-5 text-dark">Fill the details mentioned.</div>
 
               
+              
 
-              <form action="/customer/<%= customer.username%>/edit?_method=patch" method="post" enctype="multipart/form-data">
+              <form id="myForm" action="/customer/<%= customer.username%>/edit?_method=patch" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
                 <div class="row">
                   <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
@@ -180,6 +181,28 @@
                   <button class="btn btn-primary px-3" type="submit">Submit</button>
                 </div>
               </form>
+              <script>
+                function submitForm(event) {
+                  event.preventDefault(); // Prevent the form from submitting normally
+              
+                  // Update the URL displayed in the browser
+                  var desiredURL = "/customer/<%= customer.username%>/home";
+                  window.history.pushState("", "", desiredURL);
+              
+                  // Submit the form using AJAX
+                  var form = document.getElementById("myForm");
+                  var formData = new FormData(form);
+              
+                  var xhr = new XMLHttpRequest();
+                  xhr.open(form.method, form.action, true);
+                  xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      // Handle the response if needed
+                    }
+                  };
+                  xhr.send(formData);
+                }
+              </script>
               
 
             </div>

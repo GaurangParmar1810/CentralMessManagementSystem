@@ -2124,6 +2124,49 @@ const cadet_locateus_get = async (req, res) => {
         res.status(404).render('404', { err: 'cadet_locateus_get error' });
     }
 }
+const manager_deletecustomer_delete = async (req, res) => {
+    // console.log('In function!!!');
+    const username = req.query.q;
+    const manager = await User.findOne({username:req.params.username,role:'manager'});
+    if(manager){
+        // console.log(username);
+        const _delete = await User.deleteOne({ username: username, role: 'customer'});
+        console.log(_delete);
+        if (_delete.deletedCount) {
+            console.log('Deleted!!!');
+            res.status(200).json({ message: 'Customer deleted successfully' });
+        } else {
+            console.log('not found!!!');
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    }
+    else
+    {
+    res.status(500).json({ message: 'Error deleting customer', error:undefined });
+    };     
+}  
+
+
+const manager_deletecadet_delete = async (req, res) => {
+    // const manager = req.params.username;
+    const username = req.query.q;
+    // Perform the necessary operations to delete the user from the database
+    // For example, using Mongoose:
+    const manager = await User.findOne({username:req.params.username,role:'manager'});
+        if(manager){
+        User.findOneAndDelete({ username,role:'cadet' })                  
+        .then(deletedUser => {
+        if (deletedUser) {
+            res.status(200).json({ message: 'Cadet deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Cadet not found' });
+        }
+        })
+        .catch(error => {
+        res.status(500).json({ message: 'Error deleting cadet', error });
+        }); 
+    }  
+}
 
 const logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });
@@ -2189,6 +2232,8 @@ module.exports = {
     manager_about_get,
     manager_faq_get,
     manager_locateus_get,
+    manager_deletecustomer_delete,
+    manager_deletecadet_delete,
     about_get,
     faq_get,
 

@@ -42,14 +42,11 @@ const requireAuth = (req, res, next) => {
                 console.log(err.message);
                 res.status(500).render('login' , {err: 'Authentication Error'});
             } else {
-                // console.log("Vrund");
-                // console.log("Vrund");
-                // console.log(decodedToken);
                 const username = req.params.username;
-                console.log("deep");
-                console.log(res.locals.user);
+                console.log("Gaurang");
+                // console.log(res.locals.user);
                 console.log(username);
-                console.log("deep");
+                console.log("Gaurang");
 
                 const fraud = await User.findOne({ username: username });
                 if (fraud && fraud.username == res.locals.user.username) {

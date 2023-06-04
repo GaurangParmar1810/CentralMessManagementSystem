@@ -1,19 +1,10 @@
 <%- include('../partials/header_manager') %>
-
-
   <div id="wrapper">
-
     <%- include('../partials/nav_home_manager') %>
-
-
-
       <div class="container">
-
-
         <div class="row mb-5">
           <div class="col-12 col-lg-3">
             <div class="list-group text-center make-sticky ">
-
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -29,26 +20,25 @@
                   </tr>
                 </thead>
                 <tbody>
-
-                  <tr class="table-active">
+                  <tr >
                     <td><a href="/manager/<%= manager.username%>"
                         class="list-group-item list-group-item-action">Home</a></td>
                   </tr>
-
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/view"
-                        class="list-group-item list-group-item-action">View
-                        profile</a></td>
+                        class="list-group-item list-group-item-action">View profile</a></td>
                   </tr>
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/edit"
-                        class="list-group-item list-group-item-action">Edit
-                        Profile</a></td>
+                        class="list-group-item list-group-item-action">Edit Profile</a></td>
+                  </tr>
+                  <tr class="table-active">
+                    <td><a href="/manager/<%= manager.username%>/viewuser"
+                        class="list-group-item list-group-item-action">View User</a></td>
                   </tr>
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/changepassword"
-                        class="list-group-item list-group-item-action">Change
-                        password</a></td>
+                        class="list-group-item list-group-item-action">Change password</a></td>
                   </tr>
                   <tr>
                     <td><a href="/manager/<%= manager.username%>/addpayment"
@@ -101,13 +91,10 @@
                   </tr>
                 </tbody>
               </table>
-
             </div>
           </div>
           <div class="col-12 col-lg-9">
-
             <% if(err) {%>
-
               <% if(err.includes("Success") || err.includes("success") || err.includes("Successfully") ||
                 err.includes("successfully") || err.includes("Successfull") || err.includes("successfull") ) {%>
                 <div class="container">
@@ -118,217 +105,187 @@
                     </div>
                   </div>
                 </div>
-                <% } else { %>
-
-                  <div class="container">
-                    <div class="container px-2 rounded-1 text-center">
-                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <%=err %>
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <% } else { %>
+                <div class="container">
+                  <div class="container px-2 rounded-1 text-center">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <%=err %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+              <% } %>
+            <div class="container">
+              <div class="container mb-5">
+                <div class="accordion" id="accordionExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Customers
+                      </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                        
+                          <div class="container border rounded-5 p-5">
+                            <div class="row mb-5">
+                                <div class="col text-center fs-3">
+                                    Here are the customer list.
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                              <table class="table text-center table-hover border">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">User name</th>
+                                    <th scope="col">Profile Image</th>
+                                    <th scope="col">Full name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone number</th>
+                                    <th scope="col">Gender</th>
+                                    <th scope="col">Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <%if(customers){%>
+                                      <% for(const i of customers) {%>
+                                        <tr>
+                                          <td><%= i.username %> </td>
+                                          <td>
+                                              <img src="/uploads/<%= i.profileImage %>" alt="person" width="50%" class="rounded-circle">
+                                          </td>
+                                          <td> <%= i.fullname %> </td>
+                                          <td> <%= i.email%> </td>
+                                          <td> <%= i.phone %> </td>
+                                          <td> <%= i.gender %> </td>
+                                          <td>
+                                            <div class="btn-group" role="group">
+                                              <button type="button" class="btn btn-danger btn-sm" onclick="deleteConfirmCustomer('<%= i.username %>')">DELETE</button>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      <%}%>
+                                    <%}%>
+                                </tbody>
+                              </table>
+                          </div>
+                          <script>
+                            function deleteConfirmCustomer(username) {
+                              if (confirm('Are you sure you want to delete this customer?')) {
+                                deleteCustomer(username);
+                              }
+                            }
+                            function deleteCustomer(username) {
+                              // Perform AJAX request to the server to delete the user
+                              fetch(`/manager/<%=manager.username%>/deletecustomer?q=${username}`, {
+                                method: 'DELETE'
+                              })
+                              .then(response => {
+                                if (response.ok) {
+                                  // Reload the page after successful deletion
+                                  location.reload();
+                                } else {
+                                  // Handle error response
+                                  console.error('Error deleting user:', response.status);
+                                }
+                              })
+                              .catch(error => {
+                                // Handle error
+                                console.error('Error deleting user:', error);
+                              });
+                            }
+                          </script>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <% } %>
-                    <% } %>
-                      <div class="container">
-                        <div class="container mb-5">
-                          <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                              <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                  data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                  Customers
-                                </button>
-                              </h2>
-                              <div id="collapseOne" class="accordion-collapse collapse show"
-                                data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                  
-                                    <div class="container border rounded-5 p-5">
-                                                <div class="row mb-5">
-                                                    <div class="col text-center fs-3">
-                                                        Here are the customer list.
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="row mb-4">
-                                                    <div class="col-sm-1"></div>
-                                                    <div class="col-12  col-sm-5 mb-3 mb-sm-0">
-                                                        <a class="btn btn-primary"
-                                                            href="/manager/<%= manager.username%>/viewcustomer"
-                                                            role="button">View all</a>
-                                                    </div>
-                                                    <div class="col-0 col-sm-1"></div>
-                                                    <div class="col-12 col-sm-4">
-                                                        <form
-                                                            action="/manager/<%= manager.username%>/viewcustomer"
-                                                            method="post">
-                                                            <div class="row">
-                                                                <div class="col-9">
-
-                                                                    <div class="form-floating ">
-                                                                        <input type="text" class="form-control"
-                                                                            id="username" name="username"
-                                                                            placeholder="something" required>
-                                                                        <label for="username">User name</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-1">
-                                                                    <div class="text-center">
-                                                                        <button class="btn btn-primary mt-2"
-                                                                            type="submit">Apply</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="table-responsive">
-                                                <table class="table text-center table-hover border">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">User name</th>
-                                                            <th scope="col">Profile Image</th>
-                                                            <th scope="col">Full name</th>
-                                                            <th scope="col">Email</th>
-                                                            <th scope="col">Phone number</th>
-                                                            <th scope="col">Gender</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <%if(customers){%>
-                                                            <% for(const i of customers) {%>
-                                                                <tr>
-                                                                    <td>
-                                                                        <%= i.username %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <img src="/uploads/<%= i.profileImage %>"
-                                                                            alt="person" width="50%"
-                                                                            class="rounded-circle">
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= i.fullname %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= i.email%>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= i.phone %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= i.gender %>
-                                                                    </td>
-                                                                </tr>
-                                                                <%}%>
-                                                                    <%}%>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-
-                                    </div>
-
-
-
-                                </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Cadet
+                      </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                        <div class="container border rounded-5 p-5">
+                          <div class="row mb-5">
+                              <div class="col text-center fs-3">
+                              Here is the Cadet's list.
                               </div>
-                            </div>
-                            <div class="accordion-item">
-                              <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                  Cadet
-                                </button>
-                              </h2>
-                              <div id="collapseTwo" class="accordion-collapse collapse"
-                                data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                  
-                                    <div class="container border rounded-5 p-5">
-                                        <div class="row mb-5">
-                                            <div class="col text-center fs-3">
-                                            Here is the Cadet's list.
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4">
-                                            <div class="col-sm-1"></div>
-                                            <div class="col-12 col-sm-5 mb-3 mb-sm-0">
-                                            <a class="btn btn-primary" href="/manager/<%= manager.username%>/viewcustomer" role="button">View all</a>
-                                            </div>
-                                            <div class="col-12 col-sm-4">
-                                            <form action="/manager/<%= manager.username%>/viewcadet" method="post">
-                                                <div class="row">
-                                                <div class="col-9">
-                                                    <div class="form-floating">
-                                                    <input type="text" class="form-control" id="username" name="username" placeholder="something" required>
-                                                    <label for="username">User name</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3 col-sm-2">
-                                                    <div class="text-center">
-                                                    <button class="btn btn-primary mt-2" type="submit">Apply</button>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            </form>
-                                            </div>
-                                        </div>
-
-                                        <div class="table-responsive">
-                                            <table class="table text-center table-hover border">
-                                            <thead>
-                                                <tr>
-                                                <th scope="col">User name</th>
-                                                <th scope="col">Profile Image</th>
-                                                <th scope="col">Full name</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Phone number</th>
-                                                <th scope="col">Gender</th>
-                                                <th scope="col">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (cadets) { %>
-                                                <% for (const i of cadets) { %>
-                                                <tr>
-                                                <td><%= i.username %></td>
-                                                <td><img src="/uploads/<%= i.profileImage %>" alt="person" width="50%" class="rounded-circle"></td>
-                                                <td><%= i.fullname %></td>
-                                                <td><%= i.email %></td>
-                                                <td><%= i.phone %></td>
-                                                <td><%= i.gender %></td>
-                                                <td>
-                                                    <div class="btn-group" role="group">
-                                                        <i class="fas fa-pencil-alt edit-icon" onclick="editUser('<%= i.username %>')" style="margin-right: 10px; color: blue; cursor: pointer;"></i>
-                                                        <i class="fas fa-trash-alt delete-icon" onclick="deleteUser('<%= i.username %>')" style="color: red; cursor: pointer;"></i>
-                                                    </div>
-                                                    </td>
-
-
-                                                </tr>
-                                                <% } %>
-                                                <% } %>
-                                            </tbody>
-                                            </table>
-                                        </div>
-                                        </div>
-
-
-
-                                </div>
-                              </div>
-                            </div>
-
                           </div>
+                          <div class="table-responsive">
+                              <table class="table text-center table-hover border">
+                              <thead>
+                                  <tr>
+                                  <th scope="col">User name</th>
+                                  <th scope="col">Profile Image</th>
+                                  <th scope="col">Full name</th>
+                                  <th scope="col">Email</th>
+                                  <th scope="col">Phone number</th>
+                                  <th scope="col">Gender</th>
+                                  <th scope="col">Actions</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <% if (cadets) { %>
+                                  <% for (const i of cadets) { %>
+                                  <tr>
+                                  <td><%= i.username %></td>
+                                  <td><img src="/uploads/<%= i.profileImage %>" alt="person" width="50%" class="rounded-circle"></td>
+                                  <td><%= i.fullname %></td>
+                                  <td><%= i.email %></td>
+                                  <td><%= i.phone %></td>
+                                  <td><%= i.gender %></td>
+                                  <td>
+                                    <div class="btn-group" role="group">
+                                      <button type="button" class="btn btn-danger btn-sm" onclick="deleteConfirmCadet('<%= i.username %>')">DELETE</button>
+                                    </div>
+                                  </td>
+                                  </tr>
+                                  <% } %>
+                                  <% } %>
+                              </tbody>
+                              </table>
+                          </div>
+                          <script>
+                            function deleteConfirmCadet(username) {
+                              if (confirm('Are you sure you want to delete this cadet?')) {
+                                deleteCadet(username);
+                              }
+                            }
+
+                            function deleteCadet(username) {
+                              // Perform AJAX request to the server to delete the user
+                              fetch(`/manager/<%=manager.username%>/deletecadet?q=${username}`, {
+                                method: 'DELETE'
+                              })
+                                .then(response => {
+                                  if (response.ok) {
+                                    // Reload the page after successful deletion
+                                    location.reload();
+                                  } else {
+                                    // Handle error response
+                                    console.error('Error deleting user:', response.status);
+                                  }
+                                })
+                                .catch(error => {
+                                  // Handle error
+                                  console.error('Error deleting user:', error);
+                                });
+                            }
+                          </script>
                         </div>
                       </div>
-
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

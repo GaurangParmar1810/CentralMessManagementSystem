@@ -99,6 +99,9 @@ router.post('/manager/:username/viewpaymenthistory', requireAuth, authController
 router.get('/manager/:username/changemesslocation', requireAuth, authController.manager_changemesslocation_get);
 router.patch('/manager/:username/changemesslocation', requireAuth, authController.manager_changemesslocation_patch);
 
+router.delete('/manager/:username/deletecadet', requireAuth, authController.manager_deletecadet_delete);
+router.delete('/manager/:username/deletecustomer', requireAuth, authController.manager_deletecustomer_delete);
+
 router.get('/cadet/:username/view', requireAuth, authController.cadet_viewprofile_get);
 router.get('/cadet/:username/changepassword', requireAuth, authController.cadet_changepassword_get);
 router.patch('/cadet/:username/changepassword', requireAuth, authController.cadet_changepassword_patch);
