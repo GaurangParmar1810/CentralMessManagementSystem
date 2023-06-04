@@ -561,7 +561,10 @@ const customer_edit_patch = async (req, res) => {
 
               //deleting pre-existing image
               const imagePathToDelete = path.join(__dirname, '..', 'public', 'uploads', customer.profileImage);
-              fs.unlinkSync(imagePathToDelete);              
+              const imageExists = fs.existsSync(imagePathToDelete);
+              if (imageExists==true) {
+                fs.unlinkSync(imagePathToDelete);  
+              }          
             }
             //now storing the another image
             const image = sharp(req.file.path);
@@ -747,7 +750,10 @@ const manager_edit_patch = async (req, res) => {
 
               //deleting pre-existing image
               const imagePathToDelete = path.join(__dirname, '..', 'public', 'uploads', manager.profileImage);
-              fs.unlinkSync(imagePathToDelete);              
+              const imageExists = fs.existsSync(imagePathToDelete);
+                if (imageExists==true) {
+                    fs.unlinkSync(imagePathToDelete);  
+                }         
             }
             //now storing the another image
             const image = sharp(req.file.path);
@@ -1823,7 +1829,10 @@ const cadet_edit_patch = async (req, res) => {
     
                   //deleting pre-existing image
                   const imagePathToDelete = path.join(__dirname, '..', 'public', 'uploads', cadet.profileImage);
-                  fs.unlinkSync(imagePathToDelete);              
+                  const imageExists = fs.existsSync(imagePathToDelete);
+                  if (imageExists==true) {
+                    fs.unlinkSync(imagePathToDelete);  
+                  }              
                 }
                 //now storing the another image
                 const image = sharp(req.file.path);
