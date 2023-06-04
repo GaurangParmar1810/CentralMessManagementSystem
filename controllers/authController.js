@@ -1695,7 +1695,7 @@ const manager_changemesslocation_patch = async(req,res)=>{
             Messlocation.updateOne({},{ $set: { longitude: longitude, latitude: latitude } })
             .then((result) => {
                 // console.log(result);
-                res.render('manager/changemesslocation', { manager: manager, err: 'Mess location updated Successfully.' });
+                res.render('manager/changemesslocation', { manager: manager,messlocation:messlocation, err: 'Mess location updated Successfully.' });
                 // res.send("Updated successfully");
             })
             .catch((error) => {
