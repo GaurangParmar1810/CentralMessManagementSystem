@@ -1,3 +1,8 @@
+.hidden {
+  visibility: hidden;
+}
+
+
 .carousel-inner{
     border-radius: 35px 35px 35px 35px;
     overflow: hidden;
@@ -19,11 +24,21 @@
     width: 100%;
     margin:5px;
 }
-.sticky-top{
-    background-color: white;
-    border-radius: 5px;   
+.sticky-top[data-bs-theme="dark"],
+[data-bs-theme="dark"] .sticky-top {
+    background-color: #222 !important;
+    border-radius: 5px;
 }
 
+.sticky-top[data-bs-theme="light"],
+[data-bs-theme="light"] .sticky-top {
+  background-color: #fff;
+  border-radius: 5px;
+}
+body[data-bs-theme="dark"] {
+  background-color: #252525;
+  color: #cfd8dc;
+}
 a{
     text-decoration: none;
 }
@@ -97,3 +112,10 @@ input {
     width: 100%;
     border-radius: 10px;
   }
+
+  body[data-bs-theme="dark"] footer[data-bs-theme="dark"] {
+    background-color: #222;
+    color: #fff;
+  }
+  
+  
